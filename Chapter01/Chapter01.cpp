@@ -5,13 +5,12 @@
 #include <iostream>
 #include <boost/type_index.hpp>
 
+using std::cout;
+using boost::typeindex::type_id_with_cvr;
 
 template<typename T>
-void f(const T& param)
+void f(T param)
 {
-	using std::cout;
-	using boost::typeindex::type_id_with_cvr;
-
 	cout << "T = "
 		<< type_id_with_cvr<T>().pretty_name()
 		<< "\n";
@@ -19,13 +18,102 @@ void f(const T& param)
 	cout << "parame = "
 		<< type_id_with_cvr<decltype(param)>().pretty_name()
 		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	param *= 2;
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
+}
+
+template<typename T>
+void c_f(const T param)
+{
+	cout << "T = "
+		<< type_id_with_cvr<T>().pretty_name()
+		<< "\n";
+
+	cout << "parame = "
+		<< type_id_with_cvr<decltype(param)>().pretty_name()
+		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
+}
+
+template<typename T>
+void r_f(T& param)
+{
+	cout << "T = "
+		<< type_id_with_cvr<T>().pretty_name()
+		<< "\n";
+
+	cout << "parame = "
+		<< type_id_with_cvr<decltype(param)>().pretty_name()
+		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
+}
+
+template<typename T>
+void c_r_f(const T& param)
+{
+	cout << "T = "
+		<< type_id_with_cvr<T>().pretty_name()
+		<< "\n";
+
+	cout << "parame = "
+		<< type_id_with_cvr<decltype(param)>().pretty_name()
+		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
 }
 
 
 int main(int argc, char* argv[])
 {
-	int x = 0;
+	int x = 10;
+	const int cx = x;
+	const int& rx = x;
 	f(x);
+	f(cx);
+	f(rx);
+
+	c_f(x);
+	c_f(cx);
+	c_f(rx);
+
+	r_f(x);
+	r_f(cx);
+	r_f(rx);
+
+	c_r_f(x);
+	c_r_f(cx);
+	c_r_f(rx);
+
+	const char* const ptr = "const char const ptr";
+	//f(ptr);
 
 	return 0;
 }
