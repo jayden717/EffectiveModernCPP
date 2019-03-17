@@ -23,8 +23,6 @@ void f(T param)
 		<< __FUNCSIG__
 		<< "\n";
 
-	param *= 2;
-
 	cout << "value = "
 		<< param
 		<< "\n\n";
@@ -90,6 +88,71 @@ void c_r_f(const T& param)
 		<< "\n\n";
 }
 
+template<typename T>
+void p_f(T* param)
+{
+	cout << "T = "
+		<< type_id_with_cvr<T>().pretty_name()
+		<< "\n";
+
+	cout << "parame = "
+		<< type_id_with_cvr<decltype(param)>().pretty_name()
+		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
+}
+
+template<typename T>
+void c_p_f(const T* param)
+{
+	cout << "T = "
+		<< type_id_with_cvr<T>().pretty_name()
+		<< "\n";
+
+	cout << "parame = "
+		<< type_id_with_cvr<decltype(param)>().pretty_name()
+		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
+}
+
+template<typename T>
+void u_r_f(T&& param)
+{
+	cout << "T = "
+		<< type_id_with_cvr<T>().pretty_name()
+		<< "\n";
+
+	cout << "parame = "
+		<< type_id_with_cvr<decltype(param)>().pretty_name()
+		<< "\n";
+
+	cout << "func = "
+		<< __FUNCSIG__
+		<< "\n";
+
+	cout << "value = "
+		<< param
+		<< "\n\n";
+}
+
+template<typename T, size_t N>
+constexpr size_t arraySize(T (&)[N]) noexcept
+{
+	return N;
+}
 
 int main(int argc, char* argv[])
 {
@@ -99,6 +162,13 @@ int main(int argc, char* argv[])
 	f(x);
 	f(cx);
 	f(rx);
+
+	const char* const ptr = "const char const ptr";
+	f(ptr);
+	c_f(ptr);
+	const char name[] = "const char const ptr";
+	f(name);
+	r_f(name);
 
 	c_f(x);
 	c_f(cx);
@@ -112,8 +182,24 @@ int main(int argc, char* argv[])
 	c_r_f(cx);
 	c_r_f(rx);
 
-	const char* const ptr = "const char const ptr";
-	//f(ptr);
+	const int* px = &x;
+	p_f(px);
+	c_p_f(px);
+
+	u_r_f(x);
+	u_r_f(rx);
+	u_r_f(cx);
+	u_r_f(27);
+
+	int keyValues[] = {0, 1, 2, 3};
+	std::cout << "keyValues size:"
+		<< arraySize(keyValues)
+		<< std::endl;
+
+	int mappedValues[arraySize(keyValues)];
+	std::cout << "mappedValues size:"
+		<< sizeof(mappedValues) / sizeof(mappedValues[0])
+		<< std::endl;
 
 	return 0;
 }
